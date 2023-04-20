@@ -15,6 +15,8 @@ export class AppComponent {
   public decipheredText: string;
   public isCipher: boolean = true;
 
+  public mostFrequents: string;
+
   constructor(private fb: FormBuilder) {
     this.createCipherForm();
     this.createDecipherForm();
@@ -42,6 +44,7 @@ export class AppComponent {
 
   affineCipher() {
     this.cipheredText = "";
+    this.cipherFormData.message = this.cipherFormData.message.replace(/\n/g, ' ');
     let message: string = this.cipherFormData.message.toUpperCase();
     let letterMessage = message.split("");
     for (let i = 0; i < message.length; i++) {
@@ -54,7 +57,7 @@ export class AppComponent {
     let cipheredLetter;
     let dictionary = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
     let lettersDictionary = dictionary.split("");
-    let specials = ".,:;!¡¡¿?";
+    let specials = ".,:;!¡¡¿?()-_/'*+$%^@#";
     let specialsArray = specials.split("");
     let tilde = "ÁÉÍÓÚ";
     let tildeArray = tilde.split("");
@@ -84,10 +87,8 @@ export class AppComponent {
 
     for (let i = 0; i < lettersDictionary.length; i++) {
       if (lettersDictionary[i] == letter) {
-        console.log(this.cipherFormData.a, i, this.cipherFormData.b)
         let suma = (this.cipherFormData.a * i) + this.cipherFormData.b;
         let indexLetter = suma%27;
-        console.log(suma, indexLetter)
 
         for (let j = 0; j < lettersDictionary.length; j++) {
           if (indexLetter == j) {
@@ -137,6 +138,8 @@ export class AppComponent {
     let thirdMostFrequent = this.obtainFrecuencies()[2];
     let fourthMostFrequent = this.obtainFrecuencies()[3];
 
+    
+
     let a = 0;
     let b = 0;
   
@@ -144,11 +147,17 @@ export class AppComponent {
     a = ((firstMostFrequent[0] - b) * this.inverseNumber(4, 27))%27;
 
     let inverseA = this.inverseNumber(a, 27);
-
     if (inverseA == -1) {
-        b = firstMostFrequent[0]%27;
-        a = ((secondMostFrequent[0] - b) * this.inverseNumber(4, 27))%27;
+        b = secondMostFrequent[0]%27;
+        a = ((fourthMostFrequent[0] - b) * this.inverseNumber(19, 27))%27;
     }
+
+    this.mostFrequents = "Valor de a: " + a + "\n" 
+      + "Valor de b: " + b + "\n" 
+      + "Primera: " + firstMostFrequent[1] + " " + firstMostFrequent[2] + " veces" + "\n" 
+      + "Segunda: " + secondMostFrequent[1] + " " + secondMostFrequent[2] + " veces" + "\n" 
+      + "Tercera: " + thirdMostFrequent[1] + " " + thirdMostFrequent[2] + " veces" + "\n" 
+      + "Cuarta: " + fourthMostFrequent[1] + " " + fourthMostFrequent[2] + " veces";
 
     for (let i = 0; i < letterMessage.length; i++) {
       if (letterMessage[i] == " ") {
