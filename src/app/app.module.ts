@@ -18,12 +18,20 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from "@angular/material/form-field";
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { environment } from '../environments/environment';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { CifradoComponent } from './cifrado/cifrado.component';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    CifradoComponent
   ],
   imports: [
     BrowserModule,
@@ -40,11 +48,14 @@ import { MatFormFieldModule } from "@angular/material/form-field";
     MatSlideToggleModule,
     MatSelectModule,
     MatOptionModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore())
     
   ],
   exports: [ MatFormFieldModule, MatInputModule ],
-  providers: [],
+  providers: [AngularFirestore,{ provide: FIREBASE_OPTIONS, useValue: environment.firebase }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
